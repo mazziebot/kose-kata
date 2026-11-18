@@ -8,9 +8,10 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
 
-    id("com.github.johnrengelman.shadow")
+    id("com.gradleup.shadow")
 
     id("dev.kordex.gradle.kordex")
+    id("dev.kordex.gradle.i18n")
 
 //    id("io.sentry.jvm.gradle") version "4.10.0"
 }
@@ -52,12 +53,15 @@ kordEx {
         mainClass = "cafe.ferret.kosekata.AppKt"
     }
 
-    i18n {
-        classPackage = "cafe.ferret.kosekata.i18n"
-        translationBundle = "kose.strings"
-    }
-
     module("dev-unsafe")
+}
+
+i18n {
+    bundle("kose.strings", "cafe.ferret.kosekata.i18n")
+}
+
+tasks.compileTestJava {
+    dependsOn(tasks.shadowJar)  // dumb fix
 }
 
 //sentry {

@@ -9,7 +9,12 @@ import cafe.ferret.kosekata.extensions.*
 import dev.kord.common.entity.Snowflake
 import dev.kord.rest.builder.message.allowedMentions
 import dev.kordex.core.ExtensibleBot
+import dev.kordex.core.i18n.SupportedLocales
 import dev.kordex.core.utils.env
+import dev.kordex.i18n.Bundle
+import dev.kordex.i18n.I18n.defaultBundle
+import io.ktor.client.request.forms.*
+import io.ktor.utils.io.*
 
 val TEST_SERVER_ID = Snowflake(
     env("TEST_SERVER").toLong()
@@ -25,13 +30,18 @@ suspend fun main() {
 
         applicationCommands {
             if (ENVIRONMENT == "dev") {
-                defaultGuild(TEST_SERVER_ID)
+                defaultScope.limitToGuild(TEST_SERVER_ID)
             }
         }
 
         chatCommands {
             enabled = true
-            prefix { "." }
+            invokeOnMention = true
+        }
+
+        i18n {
+            defaultLocale = SupportedLocales.ENGLISH
+            defaultBundle = Bundle("kose.strings")
         }
 
         errorResponse { message, error ->
@@ -41,6 +51,10 @@ suspend fun main() {
                 appendLine("Please let us know on Discord or GitHub about it!")
                 appendLine("`$error`")
             }
+            addFile(
+                "trace.txt",
+                ChannelProvider { ByteReadChannel(error.error.stackTraceToString()) }
+            )
         }
 
         extensions {

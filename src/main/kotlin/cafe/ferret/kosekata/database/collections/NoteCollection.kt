@@ -17,8 +17,8 @@ import dev.kord.common.entity.Snowflake
 import dev.kordex.core.koin.KordExKoinComponent
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.koin.core.component.inject
 import kotlin.random.Random
 
