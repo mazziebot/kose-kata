@@ -7,6 +7,8 @@ package cafe.ferret.kosekata
 import cafe.ferret.kosekata.database.database
 import cafe.ferret.kosekata.extensions.*
 import dev.kord.common.entity.Snowflake
+import dev.kord.gateway.Intents
+import dev.kord.gateway.NON_PRIVILEGED
 import dev.kord.rest.builder.message.allowedMentions
 import dev.kordex.core.ExtensibleBot
 import dev.kordex.core.i18n.SupportedLocales
@@ -27,6 +29,10 @@ private val token = env("TOKEN")
 suspend fun main() {
     val bot = ExtensibleBot(token) {
         database(true)
+
+        intents(addDefaultIntents = false) {
+            +Intents.NON_PRIVILEGED  // kordex automatically adds message contnet intent because chat commands on
+        }
 
         applicationCommands {
             if (ENVIRONMENT == "dev") {
